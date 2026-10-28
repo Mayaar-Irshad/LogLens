@@ -34,13 +34,14 @@ const GROUPS: Array<{ label: string; items: NavEntry[] }> = [
 export function LogLensMark({ size = 28 }: { size?: number }) {
   return (
     <svg width={size} height={size} viewBox="0 0 64 64" aria-hidden="true">
-      <rect width="64" height="64" rx="14" fill="#0e0e10" />
-      <circle cx="28" cy="28" r="15" fill="none" stroke="#38bdf8" strokeWidth="5" />
-      <path d="M39 39l13 13" stroke="#38bdf8" strokeWidth="6" strokeLinecap="round" />
+      <rect width="64" height="64" rx="14" fill="#1f2024" />
+      <rect x="0.75" y="0.75" width="62.5" height="62.5" rx="13.25" fill="none" stroke="#3b3d41" />
+      <circle cx="28" cy="28" r="15" fill="none" stroke="#9d9eff" strokeWidth="5" />
+      <path d="M39 39l13 13" stroke="#9d9eff" strokeWidth="6" strokeLinecap="round" />
       <path
         d="M19 31h5l3-7 4 11 3-6h5"
         fill="none"
-        stroke="#f2f2f3"
+        stroke="#e9ebef"
         strokeWidth="3"
         strokeLinecap="round"
         strokeLinejoin="round"
@@ -79,7 +80,7 @@ export function Sidebar() {
                       className={`nav-item${active ? ' active' : ''}`}
                       aria-current={active ? 'page' : undefined}
                       disabled={disabled}
-                      title={disabled ? 'Load a log file first' : undefined}
+                      title={disabled ? 'Load a log file first' : item.label}
                       onClick={() => actions.navigate(item.view)}
                     >
                       <Icon name={item.icon} />

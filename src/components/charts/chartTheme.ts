@@ -1,51 +1,52 @@
 import type { Severity } from '../../types/detection';
 
 /**
- * Chart colours for the "data terminal" style on the #131217 card surface.
- * Colour is spent on what needs attention: failures, errors and the entities
- * that detections are about. Normal activity is drawn in neutral greys, so a
- * red or amber mark always means something. Every series also carries a text
- * label (legend, tooltip, table view), never colour alone.
+ * Chart colours for the "Graphite and Iris" style on the #18191d panel.
+ * The main volume series carries the iris accent; colour beyond that is spent
+ * on what needs attention: failures, errors and the entities that detections
+ * are about. Other activity is drawn in neutral greys, so a red or amber mark
+ * always means something. Every series also carries a text label (legend,
+ * tooltip, table view), never colour alone.
  */
 export const CHART = {
-  surface: '#131217',
-  grid: '#26252b',
-  axis: '#3a3a3e',
-  muted: '#8a8c92',
-  text: '#c4c5c9',
-  /** Ordinary volume: drawn in light neutral so hue is spent on risk only. */
-  primary: '#b9bbc1',
+  surface: '#18191d',
+  grid: '#25272b',
+  axis: '#3b3d41',
+  muted: '#9598a0',
+  text: '#babec4',
+  /** Ordinary volume over time: the one series that carries the accent. */
+  primary: '#9d9eff',
   /** Neutral marks for ordinary activity. */
-  neutral: '#7d7f86',
-  neutralStrong: '#b9bbc1',
-  neutralSoft: '#4f5157',
+  neutral: '#7b7e86',
+  neutralStrong: '#b4b7bf',
+  neutralSoft: '#4b4e55',
   /** Authentication outcome: success is ordinary, failure is the signal. */
-  success: '#7d7f86',
-  failure: '#e5566f',
+  success: '#7b7e86',
+  failure: '#f2536d',
   /** HTTP status classes in stack order 2xx, 3xx, 4xx, 5xx. */
   status: {
-    '1xx': '#7d7f86',
-    '2xx': '#7d7f86',
-    '3xx': '#4f5157',
-    '4xx': '#d9a441',
-    '5xx': '#e5566f',
+    '1xx': '#7b7e86',
+    '2xx': '#7b7e86',
+    '3xx': '#4b4e55',
+    '4xx': '#e2a640',
+    '5xx': '#f2536d',
   } as Record<string, string>,
   /** Entities that are the subject of a detection. */
-  risk: '#e5566f',
+  risk: '#f2536d',
 } as const;
 
-/** Severity uses the status palette; always paired with its text label. */
+/** Severity uses the status palette; always paired with its glyph and text label. */
 export const SEVERITY_COLORS: Record<Severity, string> = {
-  critical: '#e5566f',
-  high: '#f5930b',
-  medium: '#e8c547',
-  low: '#4a8ad6',
-  info: '#7d7f86',
+  critical: '#f2536d',
+  high: '#f5843c',
+  medium: '#f0d264',
+  low: '#5c9ff2',
+  info: '#7b7e86',
 };
 
 export const axisProps = {
   stroke: CHART.axis,
-  tick: { fill: CHART.muted, fontSize: 12 },
+  tick: { fill: CHART.muted, fontSize: 11 },
   tickLine: false,
   axisLine: false,
 } as const;

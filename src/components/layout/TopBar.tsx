@@ -3,6 +3,7 @@ import { useApp } from '../../app/AppContext';
 import { LOG_FORMAT_LABELS } from '../../types/events';
 import { formatBytes, formatDuration, formatOffset, formatTimestamp } from '../../utils/format';
 import { toSingleLine, truncate } from '../../utils/text';
+import { Icon } from '../common/Icon';
 
 export function TopBar() {
   const { state, actions, workerMode } = useApp();
@@ -21,27 +22,36 @@ export function TopBar() {
   return (
     <header className="topbar">
       <div className="topbar-meta">
-        {s ? (
-          <>
-            <span className="dataset-name" title={toSingleLine(s.source.name)}>
-              {truncate(toSingleLine(s.source.name), 48)}
-            </span>
-            <span className="meta-item">{LOG_FORMAT_LABELS[s.format]}</span>
-            <span className="meta-item">{formatBytes(s.source.sizeBytes)}</span>
-            <span className="meta-item">
-              {s.stats.eventsCreated.toLocaleString('en-US')} events
-            </span>
-            {range?.start !== undefined && range.end !== undefined && (
-              <span className="meta-item">
-                {formatTimestamp(range.start, state.timeZone)} →{' '}
-                {formatTimestamp(range.end, state.timeZone)} (
-                {formatDuration(range.end - range.start)})
-              </span>
-            )}
-          </>
-        ) : (
-          <span className="muted">No dataset loaded</span>
-        )}
+        <div className="dataset">
+          <span className="dataset-icon">
+            <Icon name="file" />
+          </span>
+          {s ? (
+            <div className="dataset-text">
+              <div className="dataset-title">
+                <span className="dataset-name" title={toSingleLine(s.source.name)}>
+                  {truncate(toSingleLine(s.source.name), 48)}
+                </span>
+                <span className="tag">{LOG_FORMAT_LABELS[s.format]}</span>
+              </div>
+              <div className="dataset-meta">
+                <span className="meta-item">{formatBytes(s.source.sizeBytes)}</span>
+                <span className="meta-item">
+                  {s.stats.eventsCreated.toLocaleString('en-US')} events
+                </span>
+                {range?.start !== undefined && range.end !== undefined && (
+                  <span className="meta-item">
+                    {formatTimestamp(range.start, state.timeZone)} →{' '}
+                    {formatTimestamp(range.end, state.timeZone)} (
+                    {formatDuration(range.end - range.start)})
+                  </span>
+                )}
+              </div>
+            </div>
+          ) : (
+            <span className="muted">No dataset loaded</span>
+          )}
+        </div>
         {workerMode === 'in-process' && (
           <span className="tag tag-warn">
             Web Workers unavailable: analysis runs on the page thread
@@ -73,6 +83,7 @@ export function TopBar() {
             className="btn"
             onClick={() => (work > 0 ? setConfirming(true) : startOver())}
           >
+            <Icon name="refresh" size={14} />
             New scan
           </button>
         )}

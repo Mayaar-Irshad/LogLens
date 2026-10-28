@@ -2,13 +2,17 @@ import type { ReactNode } from 'react';
 import { useApp } from '../../app/AppContext';
 import { classifyIp, IP_CLASS_LABELS } from '../../features/log-ingestion/normalization/ip';
 import { formatTimestamp } from '../../utils/format';
+import { Icon } from './Icon';
 
 /** An empty block keeps its frame and says, in one sentence, why it is empty. */
 export function EmptyState({ title, children }: { title: string; children?: ReactNode }) {
   return (
     <div className="empty-state" role="status">
-      <p className="empty-title">{title}</p>
-      {children && <div className="empty-body">{children}</div>}
+      <Icon name="info" className="empty-icon" />
+      <div className="empty-text">
+        <p className="empty-title">{title}</p>
+        {children && <div className="empty-body">{children}</div>}
+      </div>
     </div>
   );
 }
