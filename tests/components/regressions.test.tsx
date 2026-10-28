@@ -1,5 +1,7 @@
-import { act, screen, waitFor, within } from '@testing-library/react';
+import { act, render, screen, waitFor, within } from '@testing-library/react';
+import { StrictMode } from 'react';
 import { describe, expect, it } from 'vitest';
+import { App } from '../../src/app/App';
 import type { WorkerLike } from '../../src/workers/analysisClient';
 import type { WorkerRequest, WorkerResponse } from '../../src/workers/protocol';
 import { AnalysisService } from '../../src/workers/analysisService';
@@ -72,6 +74,19 @@ describe('investigation flow', () => {
       await screen.findByRole('heading', { name: 'Web activity', level: 1 }, { timeout: 15000 }),
     ).toBeInTheDocument();
     expect(window.location.hash).toBe('#/web');
+  }, 20000);
+
+  it('still opens a ?sample= deep link under StrictMode, as in the dev server', async () => {
+    window.history.replaceState(null, '', '/?sample=nginx-access#/web');
+    render(
+      <StrictMode>
+        <App workerFactory={() => createInProcessWorker()} />
+      </StrictMode>,
+    );
+    expect(
+      await screen.findByRole('heading', { name: 'Web activity', level: 1 }, { timeout: 15000 }),
+    ).toBeInTheDocument();
+    expect(screen.queryByText(/The scan was cancelled/)).toBeNull();
   }, 20000);
 });
 

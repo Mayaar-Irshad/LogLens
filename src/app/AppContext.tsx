@@ -144,17 +144,22 @@ export function AppProvider({
   const [initialHash] = useState(() => window.location.hash);
   useEffect(() => {
     if (autoStarted.current) return;
-    autoStarted.current = true;
     const id = new URLSearchParams(window.location.search).get('sample');
     if (!isSampleId(id)) return;
     const wanted = viewFromHash(initialHash);
     const info = sampleInfo(id);
-    void startScan(
-      { kind: 'sample', sampleId: id },
-      { format: info.format, timestamps: { assumedYear: SAMPLE_YEAR, sourceOffsetMinutes: 0 } },
-    ).then((ok) => {
-      if (ok && wanted) dispatch({ type: 'navigate', view: wanted });
+    // Start on the next task: React's development remount (StrictMode) disposes the
+    // client between the two mounts, which would cancel a scan started right away.
+    const timer = setTimeout(() => {
+      autoStarted.current = true;
+      void startScan(
+        { kind: 'sample', sampleId: id },
+        { format: info.format, timestamps: { assumedYear: SAMPLE_YEAR, sourceOffsetMinutes: 0 } },
+      ).then((ok) => {
+        if (ok && wanted) dispatch({ type: 'navigate', view: wanted });
+      });
     });
+    return () => clearTimeout(timer);
   }, [startScan, initialHash]);
 
   const actions = useMemo<AppActions>(
