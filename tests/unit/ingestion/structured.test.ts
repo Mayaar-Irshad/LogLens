@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import {
   flattenObject,
+  previewValue,
   mapStructuredRecord,
   suggestMapping,
   type FieldValue,
@@ -93,6 +94,18 @@ describe('JSON Lines parser', () => {
     const deep = `${'{"a":'.repeat(5000)}1${'}'.repeat(5000)}`;
     const r = ingest(deep, 'jsonl', { limits: { maxLineLength: 100_000 } });
     expect(r.stats.parsedRecords + r.stats.rejectedRecords).toBe(1);
+  });
+
+  it('flattens the deepest line the limits allow without overflowing the stack', () => {
+    // At the maximum line length (262,144 characters), far deeper than JSON.stringify survives.
+    const objects = `{"o":${'{"a":'.repeat(40_000)}1${'}'.repeat(40_000)}}`;
+    const arrays = `{"l":${'['.repeat(120_000)}1${']'.repeat(120_000)}}`;
+    expect(flattenObject(JSON.parse(objects) as Record<string, unknown>).get('o.a.a.a')).toBe(
+      '{"a":{"a":{"a":{…}}}}',
+    );
+    expect(flattenObject(JSON.parse(arrays) as Record<string, unknown>).get('l')).toBe('[[[[…]]]]');
+    const r = ingest(`${objects}\n${arrays}`, 'jsonl', { limits: { maxLineLength: 262_144 } });
+    expect(r.stats.parsedRecords + r.stats.rejectedRecords).toBe(2);
   });
 
   it('skips comment lines', () => {
@@ -295,6 +308,16 @@ describe('mapStructuredRecord', () => {
       ['list', '1, 2, x'],
       ['objs', '[{"k":1}]'],
     ]);
+  });
+
+  it('previews nested values like JSON, bounded in depth and length', () => {
+    expect(previewValue([{ k: 1, s: 'x"y' }, null, true])).toBe('[{"k":1,"s":"x\\"y"},null,true]');
+    expect(previewValue({ a: { b: { c: { d: 1 } } } })).toBe('{"a":{"b":{"c":{…}}}}');
+    const wide = previewValue(
+      Object.fromEntries(Array.from({ length: 500 }, (_, i) => [`k${i}`, i])),
+    );
+    expect(wide.length).toBeLessThan(600);
+    expect(wide.endsWith(',…}')).toBe(true);
   });
 
   it('validates HTTP methods', () => {

@@ -15,6 +15,34 @@ export type FlatRecord = Map<string, FieldValue>;
 
 export const MAX_FLAT_FIELDS = 200;
 const MAX_EXTRA_FIELDS = 40;
+const PREVIEW_DEPTH = 3;
+const PREVIEW_CHARS = 512;
+
+/**
+ * Compact JSON-style text for a nested value, bounded in depth and length.
+ * JSON.stringify is not used here: its native recursion can be driven into a
+ * stack overflow by a hostile, deeply nested log line.
+ */
+export function previewValue(value: unknown, depth = 0): string {
+  if (value === null || typeof value !== 'object') {
+    return typeof value === 'string' ? JSON.stringify(value) : String(value);
+  }
+  const isArray = Array.isArray(value);
+  if (depth >= PREVIEW_DEPTH) return isArray ? '[…]' : '{…}';
+  const parts: string[] = [];
+  let length = 0;
+  for (const [key, item] of Object.entries(value)) {
+    if (length > PREVIEW_CHARS) {
+      parts.push('…');
+      break;
+    }
+    const inner = previewValue(item, depth + 1);
+    const text = isArray ? inner : `${JSON.stringify(key)}:${inner}`;
+    parts.push(text);
+    length += text.length + 1;
+  }
+  return isArray ? `[${parts.join(',')}]` : `{${parts.join(',')}}`;
+}
 
 /** Flatten nested JSON into dotted keys, bounded in depth and field count. */
 export function flattenObject(obj: Record<string, unknown>, maxDepth = 4): FlatRecord {
@@ -34,13 +62,13 @@ export function flattenObject(obj: Record<string, unknown>, maxDepth = 4): FlatR
         prefix,
         primitives
           ? truncate(value.slice(0, 20).map(String).join(', '), 512)
-          : truncate(JSON.stringify(value), 512),
+          : truncate(previewValue(value), PREVIEW_CHARS),
       );
       return;
     }
     if (typeof value === 'object') {
       if (depth >= maxDepth) {
-        out.set(prefix, truncate(JSON.stringify(value), 512));
+        out.set(prefix, truncate(previewValue(value), PREVIEW_CHARS));
         return;
       }
       for (const key of Object.keys(value)) {
