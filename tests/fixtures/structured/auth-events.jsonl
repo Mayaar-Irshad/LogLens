@@ -1,0 +1,6 @@
+{"@timestamp":"2026-10-27T10:00:00Z","event":{"action":"user_login","outcome":"failure"},"source":{"ip":"203.0.113.5"},"user":{"name":"alice"},"service":"vpn"}
+{"@timestamp":"2026-10-27T10:00:05Z","event":{"action":"user_login","outcome":"success"},"source":{"ip":"203.0.113.5"},"user":{"name":"alice"},"service":"vpn"}
+{"@timestamp":"not a time","event":{"action":"user_login","outcome":"failure"},"source":{"ip":"999.1.1.1"},"user":{"name":"bob"}}
+{"@timestamp":"2026-10-27T10:01:00Z","event":{"action":"user_login","outcome":"failure"},"user":{"name":"carol"}
+["an","array"]
+{"@timestamp":1793095320,"event":{"action":"logout"},"user":{"name":"alice"},"__proto__":{"polluted":"yes"}}

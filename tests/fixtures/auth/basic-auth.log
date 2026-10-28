@@ -1,0 +1,15 @@
+Oct 27 10:00:01 bastion sshd[2101]: Failed password for root from 203.0.113.50 port 50122 ssh2
+Oct 27 10:00:03 bastion sshd[2101]: Failed password for invalid user admin from 203.0.113.50 port 50123 ssh2
+Oct 27 10:00:05 bastion sshd[2102]: Invalid user oracle from 203.0.113.50 port 50124
+Oct 27 10:00:05 bastion sshd[2102]: pam_unix(sshd:auth): authentication failure; logname= uid=0 euid=0 tty=ssh ruser= rhost=203.0.113.50  user=root
+Oct 27 10:01:00 bastion sshd[2200]: Accepted publickey for alice from 198.51.100.10 port 41000 ssh2: ED25519 SHA256:abcdef
+Oct 27 10:01:00 bastion sshd[2200]: pam_unix(sshd:session): session opened for user alice(uid=1000) by (uid=0)
+Oct 27 10:02:10 bastion sudo:    alice : TTY=pts/0 ; PWD=/home/alice ; USER=root ; COMMAND=/usr/bin/systemctl restart nginx
+Oct 27 10:03:00 bastion sshd[2101]: message repeated 3 times: [ Failed password for root from 203.0.113.50 port 50122 ssh2]
+Oct 27 10:04:00 bastion sshd[2300]: Connection closed by authenticating user bob 192.0.2.77 port 60000 [preauth]
+Oct 27 10:05:00 bastion sshd[2301]: Did not receive identification string from 192.0.2.99 port 1234
+Oct 27 10:06:00 bastion CRON[3000]: pam_unix(cron:session): session closed for user root
+Oct 27 10:07:00 bastion sudo:      bob : 3 incorrect password attempts ; TTY=pts/1 ; PWD=/home/bob ; USER=root ; COMMAND=/bin/bash
+this line is not a syslog record
+Foo 27 10:08:00 bastion sshd[2400]: Accepted password for carol from 198.51.100.11 port 41001 ssh2
+2026-10-27T10:09:00.123456+02:00 bastion sshd[2500]: Failed password for dave from 2001:db8::25 port 1022 ssh2

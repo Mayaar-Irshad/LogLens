@@ -1,0 +1,9 @@
+time,client_ip,method,url,status,user_agent,note
+2026-10-27 10:00:00,192.0.2.20,GET,/index.html,200,Mozilla/5.0,ok
+2026-10-27 10:00:01,192.0.2.20,POST,https://example.test/login?next=/admin,401,"Mozilla/5.0 (Windows NT 10.0; Win64; x64)","contains, comma"
+2026-10-27 10:00:02,192.0.2.21,GET,/admin,403,curl/8.0,"multi
+line note"
+2026-10-27 10:00:03,192.0.2.22,GET,/x,abc,curl/8.0,bad status
+2026-10-27 10:00:04,192.0.2.23,GET
+,,,,,,
+2026-10-27 10:00:05,192.0.2.24,DELETE,/api/item/1,204,=HYPERLINK("http://example.test"),formula-like

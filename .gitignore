@@ -1,0 +1,31 @@
+# Dependencies
+node_modules/
+
+# Build and test output
+dist/
+coverage/
+*.tsbuildinfo
+
+# Local environment
+.env
+.env.*
+!.env.example
+
+# Editors / OS
+.DS_Store
+.vscode/*
+!.vscode/extensions.json
+.idea/
+
+# Logs — never commit real log files
+*.log
+npm-debug.log*
+# Synthetic test fixtures (documentation IP ranges only) are the exception.
+!tests/fixtures/**/*.log
+
+# Playwright / screenshot tooling scratch
+test-results/
+playwright-report/
+
+# Design tooling working files
+.taste-skill/
